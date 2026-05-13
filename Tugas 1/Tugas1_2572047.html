@@ -1,12 +1,164 @@
 <!-- [2572047] -[Kevin Wijaya] -->
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Game – [2572047]</title>
-</head>
-<body>
-    
-</body>
+    <style>
+      body {
+        background: black;
+        color: white;
+        font-family: sans-serif;
+        overflow: hidden;
+      }
+      .message {
+        text-align: center;
+        padding: 10px;
+        font-size: 1.5rem;
+        height: 60px;
+      }
+      .start {
+        text-align: center;
+        color: #ffeb3b;
+        font-size: 1.2rem;
+      }
+      .output {
+        width: 100vw;
+        height: calc(100vh - 150px);
+        position: relative;
+      }
+      .box {
+        width: 100px;
+        height: 100px;
+        position: absolute;
+        display: none;
+        cursor: pointer;
+        border: 1px solid white;
+      }
+
+      button {
+        display: none;
+        margin: 10px auto;
+        padding: 8px 16px;
+        font-size: 1rem;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="message">Press the box to start!</div>
+    <div class="start">Time: <span id="timer">30</span>s</div>
+    <button id="resetBtn">Again</button>
+    <div class="output"></div>
+    <script>
+      const message = document.querySelector(".message");
+      const output = document.querySelector(".output");
+      const timerText = document.getElementById("timer");
+      const resetBtn = document.getElementById("resetBtn");
+
+      let score = 0;
+      let timer = 30;
+      let gameStarted = false;
+      let countdown;
+
+      function addBox(isStart = false) {
+        output.innerHTML = "";
+
+        const box = document.createElement("div");
+        box.classList.add("box");
+        box.style.position = "absolute";
+        box.style.display = "flex";
+        box.style.justifyContent = "center";
+        box.style.alignItems = "center";
+        box.style.cursor = "pointer";
+        box.style.color = "white";
+        box.style.fontWeight = "bold";
+
+        if (isStart) {
+          box.innerHTML = "START";
+          box.style.width = "100px";
+          box.style.height = "100px";
+          box.style.left = "50%";
+          box.style.top = "20%";
+          box.style.transform = "translate(-50%, -50%)";
+          box.style.backgroundColor = "black";
+          box.style.border = "1px solid white";
+          box.style.fontSize = "10px";
+        } else {
+          const width = Math.floor(Math.random() * 150) + 50;
+          const height = Math.floor(Math.random() * 150) + 50;
+
+          box.style.width = width + "px";
+          box.style.height = height + "px";
+
+          box.style.backgroundColor =
+            "#" + Math.floor(Math.random() * 16777215).toString(16);
+
+          box.style.borderRadius = Math.floor(Math.random() * 50) + "%";
+
+          const maxX = output.clientWidth - width;
+          const maxY = output.clientHeight - height;
+          const posX = Math.floor(Math.random() * maxX);
+          const posY = Math.floor(Math.random() * maxY);
+
+          box.style.left = posX + "px";
+          box.style.top = posY + "px";
+
+          box.style.fontSize = "1rem";
+        }
+
+        box.addEventListener("click", () => {
+          if (!gameStarted) {
+            startGame();
+            return;
+          }
+          score++;
+          addBox();
+        });
+
+        output.appendChild(box);
+      }
+
+      resetBtn.addEventListener("click", () => {
+        resetGame();
+      });
+
+      function startGame() {
+        gameStarted = true;
+        score = 0;
+        timer = 30;
+        message.textContent = "Click as fast as you can!";
+        timerText.textContent = timer;
+        resetBtn.style.display = "none";
+        addBox();
+
+        countdown = setInterval(() => {
+          timer--;
+          timerText.textContent = timer;
+
+          if (timer <= 0) {
+            clearInterval(countdown);
+            endGame();
+          }
+        }, 1000);
+      }
+
+      function endGame() {
+        gameStarted = false;
+        output.innerHTML = "";
+        message.textContent = "Time's up! Click count: " + score;
+        resetBtn.style.display = "inline-block";
+      }
+
+      function resetGame() {
+        message.textContent = "Press the box to start!";
+        resetBtn.style.display = "none";
+        startGame();
+      }
+
+      addBox(true);
+    </script>
+  </body>
 </html>
