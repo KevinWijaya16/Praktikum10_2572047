@@ -1,0 +1,150 @@
+<!-- [2572047] -[Kevin Wijaya] -->
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ManajemenData-2572047</title>
+  </head>
+  <style>
+    .container {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      font-family: Arial, sans-serif;
+      width: fit-content;
+      margin: auto;
+    }
+
+    #filter {
+      margin-top: 20px;
+    }
+
+    .card {
+        margin-top: 10px;
+        border: 1px solid #ddd;
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+    }
+
+    .red {
+        color: red;
+        font-weight: bold;
+    }
+    .green {
+        color: green;
+        font-weight: bold;
+    }
+  </style>
+  <body>
+    <div class="container">
+      <h2>Manajemen Data Mahasiswa</h2>
+
+      <div id="input">
+        <input
+          type="text"
+          name=""
+          id="input-nama"
+          placeholder="Nama Mahasiswa"
+        />
+        <input type="number" id="input-nilai" placeholder="Nilai (0-100)" />
+        <button id="btn-tambah">Tambah Data</button>
+      </div>
+
+      <div id="filter">
+        <button id="btn-semua">Semua</button>
+        <button id="btn-lulus">Lulus</button>
+        <button id="btn-tidak-lulus">Tidak Lulus</button>
+      </div>
+
+      <div id="kontainer-mahasiswa"></div>
+      <p id="ringkasan"></p>
+    </div>
+
+    <script>
+      let dataMahasiswa = [
+        { nama: "Andi", nilai: 80 },
+        { nama: "Budi", nilai: 45 },
+        { nama: "Citra", nilai: 62 },
+      ];
+
+      function renderMahasiswa(data) {
+        const kontainer = document.getElementById("kontainer-mahasiswa");
+        const ringkasan = document.getElementById("ringkasan");
+        kontainer.innerHTML = "";
+
+        data.forEach(function (mahasiswa) {
+          let div = document.createElement("div");
+          div.className = "card"
+          let statusText = "";
+          let color = "";
+
+          if (mahasiswa.nilai >= 55) {
+            statusText = "Lulus";
+            color = "green";
+          } else {
+            statusText = "Tidak Lulus";
+            color = "red";
+          }
+          
+          div.innerHTML = `Nama: ${mahasiswa.nama}  <br>
+          Nilai: ${mahasiswa.nilai}  <br>
+          <span class="${color}">Status: ${statusText}</span>`;
+          kontainer.appendChild(div);
+        });
+
+        ringkasan.innerText = `Menampilkan ${data.length} mahasiswa`;
+      }
+
+      document
+        .getElementById("btn-tambah")
+        .addEventListener("click", function () {
+          const inputNama = document.getElementById("input-nama");
+          const inputNilai = document.getElementById("input-nilai");
+
+          const nama = inputNama.value;
+          const nilai = parseInt(inputNilai.value);
+
+          if (nama === "" || isNaN(nilai)) {
+            alert("Nama dan nilai harus diisi!");
+            return;
+          }
+          
+
+          dataMahasiswa.push({ nama: nama, nilai: nilai });
+
+          inputNama.value = "";
+          inputNilai.value = "";
+
+          renderMahasiswa(dataMahasiswa);
+        });
+
+      document
+        .getElementById("btn-semua")
+        .addEventListener("click", function () {
+          renderMahasiswa(dataMahasiswa);
+        });
+
+      document
+        .getElementById("btn-lulus")
+        .addEventListener("click", function () {
+          const dataLulus = dataMahasiswa.filter(function(mhs) {
+            return mhs.nilai >= 55;
+          });
+          renderMahasiswa(dataLulus);
+        });
+
+      document
+        .getElementById("btn-tidak-lulus")
+        .addEventListener("click", function () {
+          const dataTidakLulus = dataMahasiswa.filter(function (mhs) {
+            return mhs.nilai < 55;
+          });
+          renderMahasiswa(dataTidakLulus);
+        });
+
+      renderMahasiswa(dataMahasiswa);
+    </script>
+  </body>
+</html>

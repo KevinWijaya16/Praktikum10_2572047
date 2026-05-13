@@ -1,0 +1,127 @@
+<!-- [2572047] -[Kevin Wijaya] -->
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calculator – [2572047]</title>
+    <style>
+      .container {
+        padding: 15px;
+        border: 0px solid gray;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        border-radius: 5px;
+        width: 450px;
+        height: fit-content;
+        margin: auto;
+      }
+
+      select,
+      input {
+        width: 100%;
+        padding: 5px;
+        box-sizing: border-box;
+      }
+      p {
+        font-weight: bold;
+        margin: 0;
+      }
+
+      .nilai {
+        margin-top: 10px;
+      }
+
+      .container div {
+        margin-top: 10px;
+        background-color: rgb(231, 231, 231);
+        padding: 10px;
+        border-radius: 3px;
+      }
+
+      .container div h5 {
+        font-size: 16px;
+        margin: 0;
+      }
+
+      .container div #hasil {
+        margin-top: 10px;
+        font-size: 13px;
+        color: #333;
+        font-weight: normal;
+      }
+
+      footer {
+        margin-top: 10px;
+        font-size: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Temperature Calculator</h2>
+      <p>Dari suhu:</p>
+      <select name="" id="">
+        <option value="celcius">Celcius</option>
+        <option value="fahrenheit">Fahrenheit</option>
+        <option value="kelvin">Kelvin</option>
+      </select>
+      <p class="nilai">Nilai:</p>
+      <input type="number" placeholder="Masukan angka..." />
+
+      <div>
+        <h5>Hasil Konversi:</h5>
+        <p id="hasil"></p>
+      </div>
+      <footer>
+        <p>&copy; 2026 [2572047] - [Kevin Wijaya]. All rights reserved.</p>
+      </footer>
+    </div>
+
+    <script>
+      const select = document.querySelector("select");
+      const inputText = document.querySelector("input");
+      const hasil = document.getElementById("hasil");
+      const units = ["Celsius", "Fahrenheit", "Kelvin"];
+
+      function calculate() {
+        let suhu = parseFloat(inputText.value);
+        let selectedUnit = select.value;
+
+        if (isNaN(suhu)) {
+          hasil.innerHTML = "Masukan nilai untuk melihat hasil!";
+          return;
+        }
+
+        let results = [];
+        if (selectedUnit === "celcius") {
+          results.push(suhu + " Celsius");
+          results.push(((suhu * 9) / 5 + 32).toFixed(2) + " Fahrenheit");
+          results.push((suhu + 273).toFixed(2) + " Kelvin");
+        } else if (selectedUnit === "fahrenheit") {
+          let celcius = ((suhu - 32) * 5) / 9;
+
+          results.push(celcius.toFixed(2) + " Celsius");
+          results.push(suhu + " Fahrenheit");
+          results.push((celcius + 273).toFixed(2) + " Kelvin");
+        } else if (selectedUnit === "kelvin") {
+          let celcius = suhu - 273;
+
+          results.push(celcius.toFixed(2) + " Celsius");
+          results.push(((celcius * 9) / 5 + 32).toFixed(2) + " Fahrenheit");
+          results.push(suhu + " Kelvin");
+        }
+
+        let display = "";
+
+        results.forEach(function (value, index) {
+          display += units[index] + " : " + value + "<br>";
+        });
+
+        hasil.innerHTML = display;
+      }
+
+      inputText.addEventListener("input", calculate);
+      select.addEventListener("change", calculate);
+    </script>
+  </body>
+</html>
